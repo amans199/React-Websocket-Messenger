@@ -2,7 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types'
 
 const Message = ({ message, author }) => (
-  <p>
+  <p className="text-white">
     <i>{author}</i> : {message}
   </p>
 )

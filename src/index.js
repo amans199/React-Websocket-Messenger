@@ -1,15 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { applyMiddleware, createStore } from 'redux'
+import { Provider } from 'react-redux'
+import CreateSagaMiddleware from 'redux-saga'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './assets/main.css'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import chat from './store/reducers'
-const store = createStore(chat)
+import reducers from './store/reducers'
+import setupSocket from './sockets'
+import handleNewMessage from './sagas'
+import username from './utils/name'
+//  created with love by AhmedMansour ['www.twitter.com/amans199']
+const sagaMiddleware = CreateSagaMiddleware()
+const store = createStore(reducers, applyMiddleware(sagaMiddleware))
 
-// store.dispatch
+const socket = setupSocket(store.dispatch, username)
+
+sagaMiddleware.run(handleNewMessage, { socket, username })
+
+// store.dispatch(addUser('Me'))
 
 ReactDOM.render(
   <Provider store={store}>
